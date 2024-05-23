@@ -7,7 +7,7 @@ export default ({ mode }) => {
 	process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 	return defineConfig({
 		define: {
-
+			'process.<wbr>env': {NODE_ENV:"production"}
 			
 		},
 		plugins: [react(), basicSsl({})],
