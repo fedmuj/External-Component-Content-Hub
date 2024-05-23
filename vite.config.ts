@@ -8,7 +8,7 @@ export default ({ mode }) => {
 	return defineConfig({
 		define: {
 			'process.<wbr>env': {NODE_ENV:"production"},
-			'process.env.NODE_ENV':"production"
+			'process.env.NODE_ENV':"\"production\""
 			
 		},
 		plugins: [react(), basicSsl({})],
