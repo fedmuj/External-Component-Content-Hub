@@ -53,8 +53,13 @@ export async function createTranslatedVariant(localizationCode: string, localiza
 
     let relation = await justCreatedVariant.getRelationAsync("ContentTypeToContent")
 
-
+    
+    
     let contentTypeId = relation?.getIds()?.[0] || 0;
+
+    let contentTypeEntity = await context.client.entities.getAsync(contentTypeId,loadConfiguration)
+    debugger
+    console.log(contentTypeEntity?.id)
 
 
 
