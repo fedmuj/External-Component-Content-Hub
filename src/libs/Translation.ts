@@ -17,6 +17,8 @@ export async function createTranslatedVariant(localizationCode: string, localiza
         throw new Error(context.entity ? "Invalid entity attribute type Content.Name" : "Empty entity in context");
     }
 
+    let nameTranslationValue = await openAITranslation(contentName, localizationCode,context);
+
     let entityVariantConfig: EntityOverride = {
         source_entity_id: context.options.entityId,
         copy_profile_identifier: "M.EntityCopyProfile.M.Content.Localizations",
@@ -25,7 +27,7 @@ export async function createTranslatedVariant(localizationCode: string, localiza
         properties_overrides: {
             "Content.Name": {
                 required: true,
-                value: contentName,
+                value: nameTranslationValue,
             },
         },
         relations_overrides: {
@@ -58,7 +60,7 @@ export async function createTranslatedVariant(localizationCode: string, localiza
 
     let contentTypeEntity = await context.client.entities.getAsync(contentTypeId,loadConfiguration)
    
-    let prefix = await contentTypeEntity?.getPropertyValue<"String">("ContentType.Prefix")
+    let prefix = contentTypeEntity?.getPropertyValue<"String">("ContentType.Prefix")
     debugger
     console.log(prefix)
 
