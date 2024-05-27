@@ -5,7 +5,6 @@ import { EntityOverride, createVariant } from "./Variant";
 import { LoadOption } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/load-options";
 import { openAITranslation } from "./OpenAIServices";
 import { Nullable } from "@sitecore/sc-contenthub-webclient-sdk";
-import { RealtimeRequestById } from "@sitecore/sc-contenthub-webclient-sdk/dist/models/notifications/realtime-request-by-id";
 import { RealtimeRequestByUsername } from "@sitecore/sc-contenthub-webclient-sdk/dist/models/notifications/realtime-request-by-username";
 
 export async function createTranslatedVariant(localizationCode: string, localizationId: string, context: ExternalContext): Promise<number> {
@@ -58,14 +57,16 @@ export async function createTranslatedVariant(localizationCode: string, localiza
     let contentTypeId = relation?.getIds()?.[0] || 0;
 
     let contentTypeEntity = await context.client.entities.getAsync(contentTypeId,loadConfiguration)
+   
+    let prefix = await contentTypeEntity?.getPropertyValue<"String">("ContentType.Prefix")
     debugger
-    console.log(contentTypeEntity?.id)
+    console.log(prefix)
 
 
 
     // Now you can safely use relation.properties[contentTypeId]
 
-    let contentType = relation?.properties[contentTypeId]["ContentType.Label"][context.options.culture] as string;
+    let contentType = prefix||'';
 
 
     let propertiesNeedsTranslation = justCreatedVariant.properties.filter((prop) => prop.dataType == "String" && prop.name.startsWith(contentType))
