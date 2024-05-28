@@ -48,6 +48,7 @@ export async function createTranslatedVariant(localizationCode: string, localiza
         .withRelations(LoadOption.All)
         .build();
 
+    let originalEntity = await context.client.entities.getAsync(context.options.entityId, loadConfiguration_)
     let justCreatedVariant = await context.client.entities.getAsync(variantID, loadConfiguration_)
     if (justCreatedVariant == null)
         throw new Error("Invalid entity attribute type Content.Name");
@@ -66,7 +67,7 @@ export async function createTranslatedVariant(localizationCode: string, localiza
 
 
 
-    // Now you can safely use relation.properties[contentTypeId]
+    
 
     let contentType = prefix||'';
 
@@ -79,7 +80,7 @@ export async function createTranslatedVariant(localizationCode: string, localiza
 
 
     for (const property of propertiesNeedsTranslation) {
-        valueToTranslate = justCreatedVariant?.getPropertyValue<"String">(property.name)
+        valueToTranslate = justCreatedVariant?.getPropertyValue<"String">(property.name)||originalEntity?.getPropertyValue<"String">(property.name)
         if (valueToTranslate) {
             translationValue = await openAITranslation(valueToTranslate, localizationCode,context);
             justCreatedVariant?.setPropertyValue<"String">(property.name, translationValue)
