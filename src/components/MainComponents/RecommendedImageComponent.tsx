@@ -32,6 +32,7 @@ export default function RecommendedImageComponent({
 
   async function search() {
     setLoading(true)
+
     let marketingBrief: {
       Brief_Title?: string
       Brief_Audience?: string
@@ -42,6 +43,8 @@ export default function RecommendedImageComponent({
       (
         context.entity?.properties['Content.Name']?.Invariant as string
       )?.replace(/<\/?[^>]+(>|$)/g, '') || ''
+
+    debugger
     marketingBrief['Brief_Audience'] =
       (
         context.entity?.properties['Brief_Audience']?.Invariant as string
@@ -53,7 +56,7 @@ export default function RecommendedImageComponent({
       ) || ''
     marketingBrief['Brief_Message'] =
       (
-        context.entity?.properties['Brief_Audience']?.Invariant as string
+        context.entity?.properties['Brief_message']?.Invariant as string
       )?.replace(/<\/?[^>]+(>|$)/g, '') || ''
     const searchTerm = await visualSearchTermGenerator(
       JSON.stringify(marketingBrief)

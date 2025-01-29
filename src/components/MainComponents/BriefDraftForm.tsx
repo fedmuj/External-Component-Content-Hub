@@ -1,9 +1,26 @@
 import { useState } from 'react'
 
 import { handleAttachment } from '../../libs/handleAttachments'
-import { Button, Input, TextField, Typography } from '@mui/material'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
+import {
+  Alert,
+  Backdrop,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Divider,
+  Input,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import ErrorIcon from '@mui/icons-material/Error'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
 import { ExternalContext } from '../../useExternalContext'
+import { createBriefFromDraft } from '../../libs/CreateBriefFromDraft'
 
 export function AttachmentForm({ context }: { context: ExternalContext }) {
   const [briefText, setBriefText] = useState('')
@@ -24,15 +41,16 @@ export function AttachmentForm({ context }: { context: ExternalContext }) {
     setPending(true)
     setMessage(null)
     setAttachment(null)
+    await createBriefFromDraft(context, formData)
     const result = await handleAttachment(formData)
     if (result.success) {
       setMessage({
         type: 'success',
         content: 'Attachment processed successfully!',
       })
-      setAttachment(result.attachment)
-      setBriefText('')
-      setFile(null)
+      //setAttachment(result.attachment)
+      //setBriefText('')
+      //setFile(null)
     } else {
       setMessage({
         type: 'error',
@@ -40,6 +58,7 @@ export function AttachmentForm({ context }: { context: ExternalContext }) {
       })
     }
     setPending(false)
+    window.location.reload()
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,8 +76,10 @@ export function AttachmentForm({ context }: { context: ExternalContext }) {
 
   return (
     <>
-      <div>
-        <Typography>Brief Text (will be converted to PDF)</Typography>
+      <Stack spacing={2} sx={{ width: '100%' }}>
+        <Typography variant="h6">
+          Brief Text (will be converted to PDF)
+        </Typography>
         <TextField
           id="briefText"
           name="briefText"
@@ -68,76 +89,109 @@ export function AttachmentForm({ context }: { context: ExternalContext }) {
             setFile(null)
           }}
           placeholder="Enter brief text to convert to PDF attachment"
-          className="w-full"
           multiline
           rows={4}
           variant="outlined"
+          fullWidth
         />
-        <Button
-          onClick={handleSubmitBrief}
-          className="mt-2"
-          disabled={!briefText}
+      </Stack>
+      <Stack spacing={3} alignItems="center">
+        <Divider sx={{ width: '100%' }}>
+          <Chip label="OR" />
+        </Divider>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSubmit(new FormData(e.currentTarget))
+          }}
         >
-          Submit Brief
-        </Button>
-      </div>
-      <div className="text-center">OR</div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          handleSubmit(new FormData(e.currentTarget))
-        }}
-        className="space-y-4"
-      >
-        <div>
-          <Typography>Upload File</Typography>
-          <Input
-            id="file"
-            name="file"
-            type="file"
-            onChange={handleFileChange}
-            className="mt-1"
-          />
-        </div>
-        {file && (
-          <p className="text-sm text-gray-500">Selected file: {file.name}</p>
+          <Stack
+            spacing={2}
+            alignItems="stretch"
+            sx={{ width: '100%', maxWidth: 400 }}
+          >
+            <Typography variant="h6">Upload File</Typography>
+            <Button
+              variant="outlined"
+              component="label"
+              startIcon={<CloudUploadIcon />}
+              sx={{ textTransform: 'none' }}
+            >
+              Choose File
+              <input
+                id="file"
+                name="file"
+                type="file"
+                onChange={handleFileChange}
+                hidden
+              />
+            </Button>
+            {file && (
+              <Typography variant="caption" color="text.secondary">
+                Selected file: {file.name}
+              </Typography>
+            )}
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={pending}
+              sx={{ mt: 2 }}
+            >
+              {pending ? 'Processing...' : 'Create Brief'}
+            </Button>
+          </Stack>
+        </form>
+
+        {message && (
+          <Alert
+            severity={message.type === 'success' ? 'success' : 'error'}
+            icon={
+              message.type === 'success' ? <CheckCircleIcon /> : <ErrorIcon />
+            }
+          >
+            {message.content}
+          </Alert>
         )}
-        <Button type="submit" disabled={pending}>
-          {pending ? 'Processing...' : 'Submit File'}
-        </Button>
-      </form>
-      {message && (
-        <div
-          className={`flex items-center ${
-            message.type === 'success' ? 'text-green-600' : 'text-red-600'
-          }`}
-        >
-          {message.type === 'success' ? <AddCircleIcon /> : <AddCircleIcon />}
-          {message.content}
-        </div>
-      )}
-      {attachment && (
-        <div className="mt-4 p-4 bg-gray-100 rounded-md">
-          <h3 className="font-semibold mb-2">Processed Attachment</h3>
-          <div className="flex items-center">
-            <AddCircleIcon />
-            <span>{attachment.name}</span>
-          </div>
-          <p className="text-sm text-gray-600">Type: {attachment.type}</p>
-          <p className="text-sm text-gray-600">
-            Size: {(attachment.size / 1024).toFixed(2)} KB
-          </p>
-          {attachment.snippet && (
-            <div className="mt-2">
-              <h4 className="font-semibold text-sm mb-1">Content Snippet:</h4>
-              <div className="p-2 bg-white rounded border border-gray-200 text-sm">
-                <AddCircleIcon />
-                {attachment.snippet}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+
+        {attachment && (
+          <Paper
+            elevation={1}
+            sx={{ p: 2, mt: 3, width: '100%', maxWidth: 400 }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Processed Attachment
+            </Typography>
+            <Stack spacing={1}>
+              <Box display="flex" alignItems="center">
+                <AttachFileIcon sx={{ mr: 1 }} />
+                <Typography>{attachment.name}</Typography>
+              </Box>
+              <Typography variant="body2" color="text.secondary">
+                Type: {attachment.type}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Size: {(attachment.size / 1024).toFixed(2)} KB
+              </Typography>
+              {attachment.snippet && (
+                <Box mt={1}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Content Snippet:
+                  </Typography>
+                  <Paper variant="outlined" sx={{ p: 1 }}>
+                    <Typography variant="body2">
+                      {attachment.snippet}
+                    </Typography>
+                  </Paper>
+                </Box>
+              )}
+            </Stack>
+          </Paper>
+        )}
+      </Stack>
+      <Backdrop open={pending}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   )
 }
