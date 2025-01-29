@@ -2,6 +2,7 @@
 import react from '@vitejs/plugin-react'
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import { defineConfig, loadEnv } from 'vite';
+import { resolve } from 'path'
 
 export default ({ mode }) => {
 	process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
@@ -16,7 +17,10 @@ export default ({ mode }) => {
 			lib: {
 				formats: ['es'],
 				fileName: process.env.npm_config_component,
-				entry: `./src/components/${process.env.npm_config_component}/index.tsx`,
+				entry: {
+					BriefSimilarImages: resolve(__dirname, 'src/components/BriefSimilarImages/index.tsx'),
+					AITranslation: resolve(__dirname, 'src/components/AITranslation/index.tsx')
+				  },
 
 			},
 

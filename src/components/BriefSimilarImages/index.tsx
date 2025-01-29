@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
-import ExternalContent from '../MainComponents/ExternalComponent'
 import { ExternalContext } from '../../useExternalContext'
 import { Container, Typography } from '@mui/material'
+import RecommendedImageComponent from '../MainComponents/RecommendedImageComponent'
 
 export default function createExternalRoot(rootElement: HTMLElement) {
   const root = ReactDOM.createRoot(rootElement)
@@ -10,12 +10,10 @@ export default function createExternalRoot(rootElement: HTMLElement) {
     async render(context: ExternalContext) {
       root.render(
         <>
-          <Container maxWidth="md">
-            <Typography variant="h5" gutterBottom>
-              Automatic Translation with AI
-            </Typography>
-            <ExternalContent context={context} />
-          </Container>
+          <Typography variant="h5" gutterBottom>
+            Recommended Images for Brief
+          </Typography>
+          <RecommendedImageComponent context={context} />
         </>
       )
     },
