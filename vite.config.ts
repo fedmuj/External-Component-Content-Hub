@@ -28,6 +28,15 @@ export default ({ mode }) => {
             __dirname,
             'src/components/BriefFromDraft/index.tsx'
           ),
+          Collaborators: resolve(
+            __dirname,
+            'src/components/Collaborators/index.tsx'
+          ),
+          ToDoList: resolve(__dirname, 'src/components/ToDoList/index.tsx'),
+          SimilarProjects: resolve(
+            __dirname,
+            'src/components/SimilarCampaigns/index.tsx'
+          ),
         },
       },
     },

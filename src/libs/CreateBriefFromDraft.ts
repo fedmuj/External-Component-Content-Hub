@@ -60,10 +60,11 @@ export async function createBriefFromDraft(
     )
     if (!response.ok) {
       throw new Error('Network response was not ok')
+    } else {
+      const data: CampaignResponse = await response.json()
+      console.log('API response mapped to CampaignResponse:', data)
+      await mapApiResponseToEntity(data, context)
     }
-    const data: CampaignResponse = await response.json()
-    console.log('API response mapped to CampaignResponse:', data)
-    await mapApiResponseToEntity(data, context)
   } catch (error) {
     console.error('Error during API call:', error)
     const defaultData: CampaignResponse = {
@@ -122,6 +123,7 @@ async function mapApiResponseToEntity(
   setRelation(block, 'BrandToProject', 47992)
   setRelation(block, 'ProjectCategoryToProject', 33425)
   setRelation(block, 'UserToProjectRequestor', 33722)
+  setRelation(block, 'UserToProjectPointOfContact', 47009)
 
   //  var relation: Nullable<IChildToManyParentsRelation> = block.getRelation(
   //    'BlockToContentBrief'
@@ -129,12 +131,24 @@ async function mapApiResponseToEntity(
   //  if (relation) {
   //    relation.setIds([51724])
   //  }
-
+  var relation: Nullable<IChildToManyParentsRelation> = block.getRelation(
+    'AgencyToProject'
+  ) as IChildToManyParentsRelation
+  if (relation) {
+    relation.setIds([47024])
+  }
   var relation: Nullable<IChildToManyParentsRelation> = block.getRelation(
     'MProjectBlockToStateMachine'
   ) as IChildToManyParentsRelation
   if (relation) {
     relation.setIds([45248])
+  }
+
+  var relation: Nullable<IChildToManyParentsRelation> = block.getRelation(
+    'BlockToAssetBrief'
+  ) as IChildToManyParentsRelation
+  if (relation) {
+    relation.setIds([52004])
   }
 
   let blockID = await context.client.entities.saveAsync(block)
@@ -153,6 +167,7 @@ async function mapApiResponseToEntity(
   briefContent.setPropertyValue('Brief_Audience', data.audiences)
   briefContent.setPropertyValue('Brief_Budget', data.campaignBudget)
   briefContent.setPropertyValue('Brief_Goal', data.goal)
+
   briefContent.setPropertyValue(
     'Brief_Market_Environment',
     data.marketEnviorment
@@ -163,7 +178,13 @@ async function mapApiResponseToEntity(
   )
   briefContent.setPropertyValue('Brief_ProjectOverview', data.projectoverview)
   briefContent.setPropertyValue('Brief_message', data.message)
-
+  var relation: Nullable<IChildToManyParentsRelation> =
+    briefContent.getRelation(
+      'MContentToStateMachine'
+    ) as IChildToManyParentsRelation
+  if (relation) {
+    relation.setIds([9862])
+  }
   var relation: Nullable<IChildToManyParentsRelation> =
     briefContent.getRelation(
       'ContentRepositoryToContent'

@@ -82,5 +82,5 @@ export async function assetsVisualSearch(
       results.filter((item): item is EntityResource => item !== null)
     )) || []
 
-  return final.slice(0, 6)
+  return final.slice(0, 4)
 }
