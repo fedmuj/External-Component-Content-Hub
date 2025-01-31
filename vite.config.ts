@@ -37,6 +37,10 @@ export default ({ mode }) => {
             __dirname,
             'src/components/SimilarCampaigns/index.tsx'
           ),
+          OverviewDashboard: resolve(
+            __dirname,
+            'src/components/OverviewDashboard/index.tsx'
+          ),
         },
       },
     },
