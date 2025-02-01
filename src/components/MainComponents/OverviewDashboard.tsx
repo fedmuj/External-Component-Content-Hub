@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   Box,
   Card,
@@ -21,6 +21,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  CircularProgress,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import NotificationsIcon from '@mui/icons-material/Notifications'
@@ -39,7 +40,9 @@ import PeopleIcon from '@mui/icons-material/People'
 
 const OverviewDashboard = () => {
   const [activeTab, setActiveTab] = useState('Overview')
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loading, setLoading] = useState(false) // New state for loading indication
 
   const tabs = [
     { label: 'Overview', icon: <NotificationsIcon /> },
@@ -49,7 +52,25 @@ const OverviewDashboard = () => {
     { label: 'Projects', icon: <FolderIcon /> },
     { label: 'Report', icon: <BarChartIcon /> },
   ]
+  // Handle file selection
+  interface FileUploadEvent extends React.ChangeEvent<HTMLInputElement> {
+    target: HTMLInputElement & EventTarget
+  }
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files && files[0]) {
+      const file = files[0]
+      console.log('Uploaded file:', file)
+      setLoading(true)
+      // Simulate a 4-second upload delay before redirecting
+      setTimeout(() => {
+        // Redirect to your specific URL
+        window.location.href =
+          'https://almu-unilever.sitecoresandbox.cloud/en-us/content/BriefDetail/52086'
+      }, 7000)
+    }
+  }
   const handleOpenModal = () => setIsModalOpen(true)
   const handleCloseModal = () => setIsModalOpen(false)
   return (
@@ -382,117 +403,140 @@ const OverviewDashboard = () => {
           </IconButton>
         </Box>
         <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Card
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  p: 2,
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'grey.300',
-                  cursor: 'pointer',
-                  '&:hover': { bgcolor: 'grey.100' },
-                }}
-              >
-                <CampaignIcon fontSize="large" color="primary" />
-                <Typography variant="subtitle1" mt={1}>
-                  Campaign brief
-                </Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  p: 2,
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'grey.300',
-                  cursor: 'pointer',
-                  '&:hover': { bgcolor: 'grey.100' },
-                }}
-              >
-                <PeopleIcon fontSize="large" color="info" />
-                <Typography variant="subtitle1" mt={1}>
-                  Influencer brief
-                </Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  p: 2,
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'grey.300',
-                  cursor: 'pointer',
-                  '&:hover': { bgcolor: 'grey.100' },
-                }}
-              >
-                <BarChartIcon fontSize="large" color="warning" />
-                <Typography variant="subtitle1" mt={1}>
-                  Media brief
-                </Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  p: 2,
-                  borderRadius: 2,
-                  border: '1px solid',
-                  borderColor: 'grey.300',
-                  cursor: 'pointer',
-                  '&:hover': { bgcolor: 'grey.100' },
-                }}
-              >
-                <EnergySavingsLeafIcon fontSize="large" color="success" />
-                <Typography variant="subtitle1" mt={1}>
-                  Evergreen brief
-                </Typography>
-              </Card>
-            </Grid>
-          </Grid>
-          <Box
-            mt={2}
-            textAlign="center"
-            onClick={() =>
-              window.open(
-                'https://almu-unilever.sitecoresandbox.cloud/en-us/content/BriefDetail/52086',
-                '_blank'
-              )
-            }
-          >
-            <Card
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                p: 2,
-                borderRadius: 2,
-                border: '1px solid',
-                borderColor: 'grey.300',
-                cursor: 'pointer',
-                '&:hover': { bgcolor: 'grey.100' },
-              }}
+          {loading ? (
+            // While loading, display a spinner and message
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              py={4}
             >
-              <RocketLaunchIcon fontSize="large" color="action" />
-              <Typography variant="subtitle1" mt={1}>
-                Start with recordings, PDFs, or other media
+              <CircularProgress />
+              <Typography variant="body1" mt={2}>
+                Uploading file, Creating the Brief, please wait...
               </Typography>
-            </Card>
-          </Box>
+            </Box>
+          ) : (
+            <>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Card
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      p: 2,
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: 'grey.300',
+                      cursor: 'pointer',
+                      '&:hover': { bgcolor: 'grey.100' },
+                    }}
+                  >
+                    <CampaignIcon fontSize="large" color="primary" />
+                    <Typography variant="subtitle1" mt={1}>
+                      Campaign brief
+                    </Typography>
+                  </Card>
+                </Grid>
+                <Grid item xs={6}>
+                  <Card
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      p: 2,
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: 'grey.300',
+                      cursor: 'pointer',
+                      '&:hover': { bgcolor: 'grey.100' },
+                    }}
+                  >
+                    <PeopleIcon fontSize="large" color="info" />
+                    <Typography variant="subtitle1" mt={1}>
+                      Influencer brief
+                    </Typography>
+                  </Card>
+                </Grid>
+                <Grid item xs={6}>
+                  <Card
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      p: 2,
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: 'grey.300',
+                      cursor: 'pointer',
+                      '&:hover': { bgcolor: 'grey.100' },
+                    }}
+                  >
+                    <BarChartIcon fontSize="large" color="warning" />
+                    <Typography variant="subtitle1" mt={1}>
+                      Media brief
+                    </Typography>
+                  </Card>
+                </Grid>
+                <Grid item xs={6}>
+                  <Card
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      p: 2,
+                      borderRadius: 2,
+                      border: '1px solid',
+                      borderColor: 'grey.300',
+                      cursor: 'pointer',
+                      '&:hover': { bgcolor: 'grey.100' },
+                    }}
+                  >
+                    <EnergySavingsLeafIcon fontSize="large" color="success" />
+                    <Typography variant="subtitle1" mt={1}>
+                      Evergreen brief
+                    </Typography>
+                  </Card>
+                </Grid>
+              </Grid>
+
+              {/* Modified Section: File Upload */}
+              <Box mt={2} textAlign="center">
+                <Card
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    p: 2,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'grey.300',
+                    cursor: 'pointer',
+                    '&:hover': { bgcolor: 'grey.100' },
+                  }}
+                  // Clicking this card triggers the hidden file input
+                  onClick={() =>
+                    fileInputRef.current && fileInputRef.current.click()
+                  }
+                >
+                  <RocketLaunchIcon fontSize="large" color="action" />
+                  <Typography variant="subtitle1" mt={1}>
+                    Start with recordings, PDFs, or other media
+                  </Typography>
+                </Card>
+                {/* Hidden file input */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  onChange={handleFileUpload}
+                  accept="audio/*,video/*,application/pdf,image/*"
+                />
+              </Box>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </Box>

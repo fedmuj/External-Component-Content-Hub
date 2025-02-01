@@ -13,6 +13,7 @@ export default function createExternalRoot(rootElement: HTMLElement) {
           <Typography variant="h5" gutterBottom>
             Recommended Images for Brief
           </Typography>
+
           <RecommendedImageComponent context={context} />
         </>
       )

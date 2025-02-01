@@ -29,39 +29,39 @@ const SimilarCampaigns = () => {
   const allCampaigns = [
     {
       id: 1,
-      name: 'Wellness, One Tap Away',
+      name: 'Fuel Up, Thrive On',
       status: 'DONE',
       fit: '91%',
       image:
-        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/ba4ab3c95ea946d3b47e5d23540e0874?v=1edda6dc',
+        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/3489d95fe1df4ae1a1d0c09ae836f178?v=74069067',
     },
     {
       id: 2,
-      name: 'Built for Your Best Self',
+      name: 'Because Every Bite Matters',
       status: 'DONE',
       fit: '84%',
       image:
-        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/ba4ab3c95ea946d3b47e5d23540e0874?v=1edda6dc',
+        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/8493cdeeb0164185a6b1785b81d295f9?v=bf6aa484',
     },
     {
       id: 3,
-      name: 'Make It a Habit',
+      name: 'Start Strong, Finish Stronger',
       status: 'DONE',
       fit: '82%',
       image:
-        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/ba4ab3c95ea946d3b47e5d23540e0874?v=1edda6dc',
+        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/d18776655f564245b46c68d51b24379e?v=392f0d5e',
     },
     {
       id: 4,
-      name: 'Every Step Counts',
+      name: 'Own Your Energy',
       status: 'IN PROGRESS',
       fit: '82%',
       image:
-        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/ba4ab3c95ea946d3b47e5d23540e0874?v=1edda6dc',
+        'https://almu-unilever.sitecoresandbox.cloud/api/public/content/13225f63c5e84db3b4a92c18ce07ddd2?v=a3e78612',
     },
     {
       id: 5,
-      name: 'Healthier Starts Here',
+      name: 'Nourish Your Potential',
       status: 'DRAFT',
       fit: '74%',
       image:

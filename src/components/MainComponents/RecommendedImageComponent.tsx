@@ -70,11 +70,7 @@ export default function RecommendedImageComponent({
   return (
     <>
       <button onClick={search} disabled={loading}></button>
-      <ImageGrid
-        context={context}
-        images={images}
-        clickHandler={addToBrief}
-      ></ImageGrid>
+      <ImageGrid images={images} onAdd={addToBrief}></ImageGrid>
       <Backdrop open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -91,6 +87,7 @@ function transformEntitiesReources(l: EntityResource[]): GridImageType[] {
       imageUrl: thumbnail,
       prompt: entity.properties['Title'] as string,
       assetID: entity.id,
+      fileName: entity.properties['FileName'] as string,
     }
   })
 }

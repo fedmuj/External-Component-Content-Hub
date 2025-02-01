@@ -1,48 +1,85 @@
-import { Grid, Typography, IconButton } from '@mui/material'
-import { ExternalContext } from '../useExternalContext'
-import AddCircleIcon from '@mui/icons-material/AddCircle'
+import {
+  Grid,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  IconButton,
+  Typography,
+  Box,
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 
 export type GridImageType = {
   assetID: number
   imageUrl: string
-  prompt: string
+  fileName: string
+  score?: number
 }
 
-export default function ImageGrid({
-  context,
-  images,
-  clickHandler: addToBrief,
-}: {
-  context: ExternalContext
+interface ImageGridProps {
   images: GridImageType[]
-  clickHandler: (gridImage: GridImageType) => void
-}) {
-  function handleSaveImage(imageUrl: any): void {
-    throw new Error('Function not implemented.')
-  }
+  onAdd?: (image: GridImageType) => void
+}
 
+export default function ImageGrid({ images, onAdd }: ImageGridProps) {
   return (
-    <Grid container spacing={1} style={{ marginTop: '1rem' }}>
-      {images.map((image, index) => (
-        <Grid item columns={2} key={index}>
-          <img
-            src={image.imageUrl}
-            alt={`Title ${image.prompt}`}
-            style={{
-              width: '300px',
-              height: 'auto',
-              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
-              borderRadius: '4px',
+    <Grid
+      container
+      spacing={2}
+      sx={{ marginTop: 2, width: 'calc(100% - 19rem)' }}
+    >
+      {images.map((img) => (
+        <Grid item xs={6} sm={4} md={3} key={img.assetID}>
+          <Card
+            sx={{
+              width: 220, // Narrower width
+              position: 'relative', // We'll place icons with absolute positioning
             }}
-          />
-          <Typography
-            variant="caption"
-            display="block"
-            gutterBottom
-          ></Typography>
-          <IconButton onClick={() => addToBrief(image)} title="Add to Brief">
-            <AddCircleIcon />
-          </IconButton>
+          >
+            {/* Image Preview (smaller height) */}
+            <CardMedia
+              component="img"
+              height="120"
+              image={img.imageUrl}
+              alt={img.fileName}
+              sx={{ objectFit: 'cover' }}
+            />
+
+            <CardContent sx={{ padding: '8px 16px' }}>
+              {/* File Name */}
+              <Typography
+                variant="subtitle2"
+                noWrap
+                title={img.fileName}
+                sx={{ lineHeight: 1.2 }}
+              >
+                {img.fileName}
+              </Typography>
+
+              {/* Score (if any) */}
+              {img.score !== undefined && (
+                <Typography variant="caption" color="text.secondary">
+                  {img.score.toFixed(2)}
+                </Typography>
+              )}
+            </CardContent>
+
+            {/* Icon row at bottom */}
+            <CardActions
+              sx={{ justifyContent: 'space-between', padding: '4px 8px' }}
+            >
+              <Box>
+                <IconButton
+                  size="small"
+                  onClick={() => onAdd?.(img)}
+                  title="Add"
+                >
+                  <AddIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            </CardActions>
+          </Card>
         </Grid>
       ))}
     </Grid>
